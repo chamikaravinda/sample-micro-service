@@ -6,7 +6,11 @@
 
   <groupId>com.zigma96</groupId>
   <artifactId>zigma-service</artifactId>
+  <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
+  <modules>
+    <module>customer</module>
+  </modules>
 
   <name>zigma-service</name>
   <url>https://www.zigma96.com</url>
