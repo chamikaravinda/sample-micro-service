@@ -1,8 +1,6 @@
 package com.zigma.customer.model;
 
 import lombok.*;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-
 import javax.persistence.*;
 
 @Data
