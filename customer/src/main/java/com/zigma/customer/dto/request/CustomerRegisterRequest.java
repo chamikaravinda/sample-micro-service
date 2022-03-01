@@ -1,7 +1,7 @@
 package com.zigma.customer.dto.request;
 
 public record CustomerRegisterRequest(
-    String fistName,
+    String firstName,
     String lastName,
     String email) {
 
