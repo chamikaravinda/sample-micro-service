@@ -27,11 +27,11 @@ public class CustomerService {
 
         //todo: check if fraudster
         FraudCheckResponse fraudCheckResponse = restTemplate.getForObject(
-                "http://localhost:8081/api/v1/fraud-check/{customerId}",
+                "http://FRAUD/api/v1/fraud-check/{customerId}",
                 FraudCheckResponse.class,
                 customer.getId()
         );
-        if(fraudCheckResponse.isFraudster()){
+        if(fraudCheckResponse != null && fraudCheckResponse.isFraudster()){
             throw new IllegalStateException("fraudster");
         }
         //todo: send notification
