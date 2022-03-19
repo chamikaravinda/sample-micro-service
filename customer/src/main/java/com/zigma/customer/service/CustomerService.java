@@ -2,6 +2,8 @@ package com.zigma.customer.service;
 
 import com.zigma.clients.fraud.FraudCheckResponse;
 import com.zigma.clients.fraud.FraudClient;
+import com.zigma.clients.notification.NotificationClient;
+import com.zigma.clients.notification.NotificationRequest;
 import com.zigma.customer.dto.request.CustomerRegisterRequest;
 import com.zigma.customer.model.Customer;
 import com.zigma.customer.repository.CustomerRepository;
@@ -14,6 +16,8 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final FraudClient fraudClient;
+    private final NotificationClient notificationClient;
+
     public void registerCustomer(CustomerRegisterRequest request){
         Customer customer = Customer.builder()
                 .firstName(request.firstName())
@@ -30,6 +34,13 @@ public class CustomerService {
         if(fraudCheckResponse != null && fraudCheckResponse.isFraudster()){
             throw new IllegalStateException("fraudster");
         }
-        //todo: send notification
+
+        notificationClient.sendNotification(
+                new NotificationRequest(
+                  customer.getId(),
+                  customer.getEmail(),
+                  String.format("Hi %s,welcome to Zigma Service....",customer.getFirstName())
+                )
+        );
     }
 }
