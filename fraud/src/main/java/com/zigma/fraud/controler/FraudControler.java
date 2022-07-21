@@ -1,6 +1,6 @@
 package com.zigma.fraud.controler;
 
-import com.zigma.fraud.dto.response.FraudCheckResponse;
+import com.zigma.clients.fraud.FraudCheckResponse;
 import com.zigma.fraud.service.FraudCheckService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

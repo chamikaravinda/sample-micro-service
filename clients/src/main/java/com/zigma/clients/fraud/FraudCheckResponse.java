@@ -1,4 +1,4 @@
-package com.zigma.fraud.dto.response;
+package com.zigma.clients.fraud;
 
 public record FraudCheckResponse(boolean isFraudster) {
 }
