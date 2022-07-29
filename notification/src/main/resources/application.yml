@@ -27,3 +27,10 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
 
+rabbitmq:
+  exchanges:
+    internal: internal.exchange
+    queue:
+      notification: notification.queue
+    routing-keys:
+      internal-notification:internal.notification.routing-key

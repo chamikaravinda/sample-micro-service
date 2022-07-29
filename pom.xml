@@ -15,6 +15,7 @@
     <module>clients</module>
     <module>notification</module>
       <module>api-gate-way</module>
+      <module>advance-msg-queue</module>
   </modules>
 
   <name>zigma-service</name>
