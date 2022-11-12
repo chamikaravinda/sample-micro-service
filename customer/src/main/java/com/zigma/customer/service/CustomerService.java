@@ -1,5 +1,6 @@
 package com.zigma.customer.service;
 
+import com.zigma.advanceMsgQueue.producer.RabbitMqMessageProducer;
 import com.zigma.clients.fraud.FraudCheckResponse;
 import com.zigma.clients.fraud.FraudClient;
 import com.zigma.clients.notification.NotificationClient;
@@ -16,7 +17,7 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final FraudClient fraudClient;
-    private final NotificationClient notificationClient;
+    private final RabbitMqMessageProducer rabbitMqMessageProducer;
 
     public void registerCustomer(CustomerRegisterRequest request){
         Customer customer = Customer.builder()
@@ -35,12 +36,12 @@ public class CustomerService {
             throw new IllegalStateException("fraudster");
         }
 
-        notificationClient.sendNotification(
-                new NotificationRequest(
-                  customer.getId(),
-                  customer.getEmail(),
-                  String.format("Hi %s,welcome to Zigma Service....",customer.getFirstName())
-                )
+        NotificationRequest notificationRequest = new NotificationRequest(
+                customer.getId(),
+                customer.getEmail(),
+                String.format("Hi %s,welcome to Zigma Service....",customer.getFirstName())
         );
+        rabbitMqMessageProducer.publish(notificationRequest,
+                "internal.exchange","internal.notification.routing-key");
     }
 }

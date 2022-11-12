@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication(
         scanBasePackages = {
                 "com.zigma.notification",
-                "com.zigma.advanceMsgQueue"
+                "com.zigma.advanceMsgQueue",
         }
 )
 public class NotificationApplication {
@@ -31,6 +31,6 @@ public class NotificationApplication {
                     config.getInternalExchange(),
                     config.getInternalNotificationRoutingKey()
             );
-        }; 
+        };
     }
 }
