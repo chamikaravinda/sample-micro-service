@@ -1,4 +1,11 @@
 #CMD TO RUN THIS FROM TERMINAL: docker compose up -d
+
+# Networks are there since the local network not working on running separate containers.
+# So Spring network is created
+
+# Enviroment is use to set env variables.
+# SPRING_PROFILES_ACTIVE env variable is used to change the application property yml file
+
 services:
   postgres:
     container_name: postgres
@@ -6,6 +13,7 @@ services:
     environment:
       POSTGRES_USER: zigma96
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: notifications
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
@@ -33,12 +41,84 @@ services:
     container_name: zipkin
     ports:
       - "9411:9411"
+    networks:
+      - spring
   rabbitmq:
     image: rabbitmq:3.9.11-management-alpine
     container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - spring
+  zigma-eureka-server:
+    image: chamikaravinda/zigma-eureka-server:latest
+    container_name: zigma-eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+       - spring
+    depends_on:
+      - zipkin
+  zigma-api-gate-way:
+    image: chamikaravinda/zigma-api-gate-way:latest
+    container_name: zigma-api-gate-way
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+    depends_on:
+      - zipkin
+      - zigma-eureka-server
+  zigma-customer:
+    image: chamikaravinda/zigma-customer:latest
+    container_name: zigma-customer
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - zipkin
+      - zigma-eureka-server
+      - postgres
+      - rabbitmq
+  zigma-fraud:
+    image: chamikaravinda/zigma-fraud:latest
+    container_name: zigma-fraud
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - zipkin
+      - zigma-eureka-server
+      - postgres
+      - rabbitmq
+  zigma-notification:
+    image: chamikaravinda/zigma-notification:latest
+    container_name: zigma-notification
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - zipkin
+      - zigma-eureka-server
+      - postgres
+      - rabbitmq
 networks:
   postgres:
     driver: bridge
